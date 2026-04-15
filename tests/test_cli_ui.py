@@ -27,6 +27,13 @@ class CliUITests(unittest.TestCase):
         self.assertEqual(args[-4:], ["--server.address", "0.0.0.0", "--server.port", "9001"])
         self.assertTrue(mock_run.call_args.kwargs["check"])
 
+    @patch("gawe_video.cli.subprocess.run")
+    def test_ui_command_uses_default_port(self, mock_run) -> None:
+        result = self.runner.invoke(app, ["ui"])
+        self.assertEqual(result.exit_code, 0)
+        args = mock_run.call_args.args[0]
+        self.assertEqual(args[-2:], ["--server.port", "8501"])
+
     @patch("gawe_video.cli.subprocess.run", side_effect=FileNotFoundError("streamlit not found"))
     def test_ui_command_missing_streamlit(self, _mock_run) -> None:
         result = self.runner.invoke(app, ["ui"])

@@ -201,12 +201,14 @@ def _render_generate_tab(settings: dict[str, object]) -> None:
 
             video_bytes = result.output_path.read_bytes()
             st.session_state["generated_video"] = video_bytes
+            generated_filename = f"gaweVideo-{datetime.now().strftime('%Y%m%d-%H%M%S')}.mp4"
+            st.session_state["generated_video_filename"] = generated_filename
             st.session_state["generation_message"] = (
                 f"Generated {result.scene_count} scenes • TTS: {'on' if result.has_tts else 'off'}"
             )
             history_item = {
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "filename": f"gaweVideo-{datetime.now().strftime('%H%M%S')}.mp4",
+                "filename": generated_filename,
                 "video_bytes": video_bytes,
                 "markdown": markdown,
                 "scene_count": result.scene_count,
@@ -223,7 +225,7 @@ def _render_generate_tab(settings: dict[str, object]) -> None:
         st.download_button(
             "⬇️ Download Video",
             data=st.session_state["generated_video"],
-            file_name="gaweVideo-output.mp4",
+            file_name=st.session_state.get("generated_video_filename", "gaweVideo-output.mp4"),
             mime="video/mp4",
             use_container_width=True,
         )

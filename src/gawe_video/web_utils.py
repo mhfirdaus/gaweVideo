@@ -87,6 +87,7 @@ def init_session_state() -> None:
         "markdown_editor": "",
         "current_markdown": "",
         "generated_video": None,
+        "generated_video_filename": "gaweVideo-output.mp4",
         "generation_message": "",
         "history": [],
         "temp_files": [],
