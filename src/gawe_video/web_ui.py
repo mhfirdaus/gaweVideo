@@ -23,11 +23,11 @@ from gawe_video.web_utils import (
     save_uploaded_file,
 )
 
-THEME_COLOR_PREVIEWS = {
-    "monokai": ["#272822", "#a6e22e", "#f92672", "#66d9ef"],
-    "dracula": ["#282a36", "#bd93f9", "#50fa7b", "#ff79c6"],
-    "github-dark": ["#0d1117", "#58a6ff", "#7ee787", "#f778ba"],
-    "one-dark": ["#282c34", "#61afef", "#98c379", "#c678dd"],
+THEME_PRESETS = {
+    "monokai": {"label": "Monokai", "colors": ["#272822", "#a6e22e", "#f92672", "#66d9ef"]},
+    "dracula": {"label": "Dracula", "colors": ["#282a36", "#bd93f9", "#50fa7b", "#ff79c6"]},
+    "github-dark": {"label": "GitHub Dark", "colors": ["#0d1117", "#58a6ff", "#7ee787", "#f778ba"]},
+    "one-dark": {"label": "One Dark", "colors": ["#282c34", "#61afef", "#98c379", "#c678dd"]},
 }
 
 VOICE_OPTIONS = (
@@ -65,12 +65,13 @@ def _render_sidebar() -> dict[str, object]:
 
     selected_theme = st.sidebar.selectbox(
         "🎨 Theme Selector",
-        options=["monokai", "dracula", "github-dark", "one-dark"],
-        format_func=lambda t: t.replace("-", " ").title(),
+        options=list(THEME_PRESETS.keys()),
+        format_func=lambda t: str(THEME_PRESETS[t]["label"]),
         help="Choose code highlight theme for generated tutorial scenes.",
     )
     swatches = "".join(
-        f"<span class='theme-swatch' style='background:{color}'></span>" for color in THEME_COLOR_PREVIEWS[selected_theme]
+        f"<span class='theme-swatch' style='background:{color}'></span>"
+        for color in THEME_PRESETS[selected_theme]["colors"]
     )
     st.sidebar.markdown(f"<div class='theme-preview'>{swatches}</div>", unsafe_allow_html=True)
 
@@ -205,7 +206,7 @@ def _render_generate_tab(settings: dict[str, object]) -> None:
             )
             history_item = {
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "filename": f"gawevideo-{datetime.now().strftime('%H%M%S')}.mp4",
+                "filename": f"gaweVideo-{datetime.now().strftime('%H%M%S')}.mp4",
                 "video_bytes": video_bytes,
                 "markdown": markdown,
                 "scene_count": result.scene_count,
@@ -222,7 +223,7 @@ def _render_generate_tab(settings: dict[str, object]) -> None:
         st.download_button(
             "⬇️ Download Video",
             data=st.session_state["generated_video"],
-            file_name="gawevideo-output.mp4",
+            file_name="gaweVideo-output.mp4",
             mime="video/mp4",
             use_container_width=True,
         )
