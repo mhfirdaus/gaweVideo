@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 
 import typer
@@ -71,6 +72,25 @@ def generate(
             f"TTS: {'off' if no_tts else 'on'}"
         )
     )
+
+
+@app.command("ui")
+def launch_ui(
+    host: str = typer.Option("127.0.0.1", "--host", help="Streamlit server host"),
+    port: int = typer.Option(8501, "--port", help="Streamlit server port"),
+) -> None:
+    """Launch Streamlit web UI."""
+    ui_path = Path(__file__).with_name("web_ui.py")
+    command = ["streamlit", "run", str(ui_path), "--server.address", host, "--server.port", str(port)]
+    console.print(Panel.fit("[bold cyan]Launching gaweVideo Web UI[/bold cyan]"))
+    try:
+        subprocess.run(command, check=True)
+    except FileNotFoundError as exc:
+        console.print("[red]Streamlit was not found. Install it with: pip install streamlit watchdog[/red]")
+        raise typer.Exit(code=1) from exc
+    except subprocess.CalledProcessError as exc:
+        console.print(f"[red]Failed to launch Streamlit UI (exit code {exc.returncode}).[/red]")
+        raise typer.Exit(code=exc.returncode) from exc
 
 
 if __name__ == "__main__":  # pragma: no cover

@@ -34,6 +34,27 @@ gawe-video generate examples/sample.md --bgm /path/music.mp3 --speed 1.1
 gawe-video generate examples/sample.md --no-tts
 ```
 
+### Web UI
+Sekarang gaweVideo punya antarmuka web modern berbasis Streamlit:
+- Sidebar settings (theme, voice, speed, resolution, FPS, BGM)
+- Tab Upload & Generate, Preview Scenes, Templates, dan History
+- Preview scene-by-scene dengan opsi re-order dan skip
+- Session-based history untuk download ulang
+
+![gaweVideo Web UI](https://github.com/user-attachments/assets/b2061f88-9bc8-485c-9473-3d4f546624db)
+
+Jalankan Web UI:
+```bash
+gawe-video ui
+```
+
+Atau langsung via Streamlit:
+```bash
+streamlit run src/gawe_video/web_ui.py
+```
+
+> Catatan: preview/parsing bisa dijalankan tanpa FFmpeg, tetapi proses video production penuh tetap membutuhkan FFmpeg.
+
 ### Konfigurasi
 Atur default pada `src/gawe_video/config.py`:
 - Resolusi/FPS/bitrate video
@@ -83,6 +104,27 @@ gawe-video generate examples/sample.md --preview
 gawe-video generate examples/sample.md --bgm /path/music.mp3
 gawe-video generate examples/sample.md --no-tts
 ```
+
+### Web UI
+gaweVideo now includes a modern Streamlit web interface with:
+- Sidebar controls for theme, voice, speed, resolution, FPS, and BGM
+- Upload & Generate, Scene Preview, Templates, and History tabs
+- Scene-by-scene preview with reorder and skip controls
+- Session-based generated video history for quick re-download
+
+![gaweVideo Web UI](https://github.com/user-attachments/assets/b2061f88-9bc8-485c-9473-3d4f546624db)
+
+Launch it with:
+```bash
+gawe-video ui
+```
+
+Or run Streamlit directly:
+```bash
+streamlit run src/gawe_video/web_ui.py
+```
+
+> Note: parsing/preview features can run without FFmpeg, but full production video workflows still require FFmpeg.
 
 ### Configuration
 Edit defaults in `src/gawe_video/config.py`:
