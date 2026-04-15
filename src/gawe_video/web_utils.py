@@ -126,10 +126,18 @@ def make_temp_output_path() -> Path:
     return path
 
 
+def make_temp_audio_path() -> Path:
+    """Create temporary narration path placeholder."""
+    temp = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+    temp.close()
+    path = Path(temp.name)
+    register_temp_file(path)
+    return path
+
+
 def cleanup_temp_files() -> None:
     """Delete tracked temporary files if they still exist."""
     for raw_path in st.session_state.get("temp_files", []):
         path = Path(raw_path)
-        if path.exists():
-            path.unlink(missing_ok=True)
+        path.unlink(missing_ok=True)
     st.session_state["temp_files"] = []

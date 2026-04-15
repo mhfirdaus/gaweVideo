@@ -18,6 +18,7 @@ from gawe_video.web_utils import (
     cleanup_temp_files,
     get_custom_css,
     init_session_state,
+    make_temp_audio_path,
     make_temp_output_path,
     save_uploaded_file,
 )
@@ -187,10 +188,11 @@ def _render_generate_tab(settings: dict[str, object]) -> None:
 
                 status.info("Composing final video...")
                 output_path = make_temp_output_path()
+                narration_path = make_temp_audio_path() if config.tts.enabled else None
                 result = compose_video(
                     rendered,
                     output_path,
-                    narration_path=None if not config.tts.enabled else "narration.wav",
+                    narration_path=narration_path,
                     bgm_path=bgm_path,
                 )
                 progress.progress(100)
