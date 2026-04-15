@@ -201,13 +201,14 @@ def _render_generate_tab(settings: dict[str, object]) -> None:
 
             video_bytes = result.output_path.read_bytes()
             st.session_state["generated_video"] = video_bytes
-            generated_filename = f"gaweVideo-{datetime.now().strftime('%Y%m%d-%H%M%S')}.mp4"
+            generated_at = datetime.now()
+            generated_filename = f"gaweVideo-{generated_at.strftime('%Y%m%d-%H%M%S')}.mp4"
             st.session_state["generated_video_filename"] = generated_filename
             st.session_state["generation_message"] = (
                 f"Generated {result.scene_count} scenes • TTS: {'on' if result.has_tts else 'off'}"
             )
             history_item = {
-                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "timestamp": generated_at.strftime("%Y-%m-%d %H:%M:%S"),
                 "filename": generated_filename,
                 "video_bytes": video_bytes,
                 "markdown": markdown,

@@ -9,6 +9,11 @@ from typing import Any
 import streamlit as st
 
 
+def _create_temp_path(suffix: str) -> Path:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temp:
+        return Path(temp.name)
+
+
 def get_custom_css() -> str:
     """Return custom CSS for a dark, modern UI."""
     return """
@@ -109,29 +114,24 @@ def register_temp_file(path: Path) -> None:
 def save_uploaded_file(uploaded_file: Any) -> Path:
     """Persist uploaded file into a temporary path."""
     suffix = Path(uploaded_file.name).suffix or ".tmp"
-    temp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
-    temp.write(uploaded_file.getbuffer())
-    temp.flush()
-    temp.close()
-    path = Path(temp.name)
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temp:
+        temp.write(uploaded_file.getbuffer())
+        temp.flush()
+        path = Path(temp.name)
     register_temp_file(path)
     return path
 
 
 def make_temp_output_path() -> Path:
     """Create temporary output path for generated video file."""
-    temp = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
-    temp.close()
-    path = Path(temp.name)
+    path = _create_temp_path(".mp4")
     register_temp_file(path)
     return path
 
 
 def make_temp_audio_path() -> Path:
     """Create temporary narration path placeholder."""
-    temp = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-    temp.close()
-    path = Path(temp.name)
+    path = _create_temp_path(".wav")
     register_temp_file(path)
     return path
 
